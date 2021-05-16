@@ -1,12 +1,43 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
+    <title>Bus-Mall</title>
+    <link rel="preconnect" href="https://fonts.gstatic.com">
+    <link href="https://fonts.googleapis.com/css2?family=Newsreader:ital@1&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="css/reset.css">
+    <link rel="stylesheet" href="css/style.css">
 </head>
+
 <body>
-    
+    <header>
+        <img src="img/bus-mall.png" alt="logo">
+        <h1>Bus Mall</h1>
+    </header>
+    <main>
+        <p>
+            Welcome to our page. <br> You can vote to your favorite product and you have 25
+            rounds.
+        </p>
+        <br /><br />
+        <span>Number of attempts : </span>
+        <span id="attempts"></span> <br /><br /><br />
+        <div id="image-container">
+            <img id="leftImg" src="" alt="" title="" />
+            <img id="middleImg" src="" alt="" title="" />
+            <img id="rightImg" src="" alt="" title="" />
+        </div>
+        <div id='results-container'>
+            <ul id="results"></ul>
+        </div>
+    </main>
+    <footer>
+        Copyright &copy; 2021 Tariq Abu-laban
+    </footer>
+    <script src="js/app.js"></script>
 </body>
+
 </html>
