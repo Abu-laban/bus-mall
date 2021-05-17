@@ -4,6 +4,9 @@ let attempts = 0;
 let maxAttempts = 25;
 let attemptsElement = document.getElementById('attempts');
 let allProducts = [];
+let allImageName = [];
+let allTotalClicks = [];
+let allTotalViews = [];
 
 let ProductsImages = ['bag.jpg', 'banana.jpg', 'bathroom.jpg', 'boots.jpg', 'breakfast.jpg', 'bubblegum.jpg', 'chair.jpg', 'cthulhu.jpg', 'dog-duck.jpg', 'dragon.jpg', 'pen.jpg', 'pet-sweep.jpg', 'scissors.jpg', 'shark.jpg', 'sweep.png', 'tauntaun.jpg', 'unicorn.jpg', 'water-can.jpg', 'wine-glass.jpg'];
 
@@ -15,6 +18,8 @@ let leftImgIndex;
 let middleImgIndex;
 let rightImgIndex;
 
+let lastImages = [];
+
 function ProductImages(imageName) {
 
     this.imageName = imageName.split('.')[0];
@@ -22,6 +27,8 @@ function ProductImages(imageName) {
     this.totalClicks = 0;
     this.totalViews = 0;
     allProducts.push(this);
+    allImageName.push(this.imageName);
+    
 }
 
 for (let i = 0; i < ProductsImages.length; i++) {
@@ -38,9 +45,12 @@ function renderImg() {
     middleImgIndex = randomImage();
     rightImgIndex = randomImage();
 
-    while (leftImgIndex === middleImgIndex || leftImgIndex === rightImgIndex || middleImgIndex === rightImgIndex) {
+   
+
+    while (leftImgIndex === middleImgIndex || leftImgIndex === rightImgIndex || middleImgIndex === rightImgIndex || lastImages.includes(leftImgIndex) || lastImages.includes(middleImgIndex) || lastImages.includes(rightImgIndex) ) {
         leftImgIndex = randomImage();
         middleImgIndex = randomImage();
+        rightImgIndex = randomImage();
 
     }
 
@@ -56,6 +66,11 @@ function renderImg() {
     rImgEl.setAttribute('title', allProducts[rightImgIndex].imageName);
     allProducts[rightImgIndex].totalViews++;
     attemptsElement.textContent = attempts;
+
+    lastImages[0]=leftImgIndex;
+    lastImages[1]=middleImgIndex;
+    lastImages[2]=rightImgIndex;
+
 
 }
 renderImg();
@@ -86,7 +101,7 @@ function handelClicks(event) {
         let result = document.getElementById('results-container')
         let btn = document.createElement('button')
         result.appendChild(btn);
-        btn.textContent='Results';
+        btn.textContent='View Results';
         
         btn.addEventListener('click', resultClick);
 
@@ -97,11 +112,58 @@ function handelClicks(event) {
                 liElement = document.createElement('li');
                 ulElement.appendChild(liElement);
                 liElement.textContent = `${allProducts[i].imageName} had ${allProducts[i].totalClicks} votes, and was seen ${allProducts[i].totalViews} times.`
+                
+                allTotalClicks.push(allProducts[i].totalClicks);
+                allTotalViews.push(allProducts[i].totalViews);
+            
             }
             btn.removeEventListener('click', resultClick);
+            chartRender();
         }
 
     }
 }
 
+function chartRender(){
+var ctx = document.getElementById('myChart').getContext('2d');
 
+Chart.defaults.font.size = 16;
+Chart.defaults.borderColor='red';
+Chart.defaults.backgroundColor='white';
+Chart.defaults.color='gold';
+
+
+var myChart = new Chart(ctx, {
+    type: 'bar',
+    data: {
+        labels: allImageName,
+        datasets: [{
+            label: '# of Votes',
+            data: allTotalClicks,
+            backgroundColor: [
+                'rgba(255, 32, 255, 0.2)',
+            ],
+            borderColor: [
+                'rgba(255, 32, 255, 1)',
+            ],
+            borderWidth: 2
+        },{
+            label: '# of Views',
+            data: allTotalViews,
+            backgroundColor: [ 
+                'rgba(153, 102, 255, 0.2)',
+            ],
+            borderColor: [
+                'rgba(153, 102, 255, 1)',
+            ],
+            borderWidth: 2
+        }]
+    },
+    options: {
+        scales: {
+            y: {
+                beginAtZero: true,
+            },
+        }
+    }
+});}
