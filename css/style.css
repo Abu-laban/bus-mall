@@ -2,7 +2,7 @@
   box-sizing: border-box;
 }
 body {
-  background-color: rgb(19, 18, 18);
+  background-color: rgb(58, 57, 57);
   color: whitesmoke;
   width: 100%;
   margin-left: auto;
@@ -91,4 +91,7 @@ main button:active {
 footer{
     text-align: center;
     padding: 20px 0;
+}
+#chart-container{
+  padding: 15px 150px;
 }
