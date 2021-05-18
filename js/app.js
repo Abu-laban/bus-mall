@@ -8,11 +8,28 @@ let allImageName = [];
 let allTotalClicks = [];
 let allTotalViews = [];
 
+function ProductImages(imageName) {
+    this.imageName = imageName.split('.')[0];
+    this.imageSrc = 'img/' + imageName,
+        this.totalClicks = 0,
+        this.totalViews = 0,
+        allProducts.push(this);
+    allImageName.push(this.imageName);
+}
+
 let ProductsImages = ['bag.jpg', 'banana.jpg', 'bathroom.jpg', 'boots.jpg', 'breakfast.jpg', 'bubblegum.jpg', 'chair.jpg', 'cthulhu.jpg', 'dog-duck.jpg', 'dragon.jpg', 'pen.jpg', 'pet-sweep.jpg', 'scissors.jpg', 'shark.jpg', 'sweep.png', 'tauntaun.jpg', 'unicorn.jpg', 'water-can.jpg', 'wine-glass.jpg'];
 
-let lImgEl = document.getElementById('leftImg');
-let mImgEl = document.getElementById('middleImg');
-let rImgEl = document.getElementById('rightImg');
+for (let i = 0; i < ProductsImages.length; i++) {
+    new ProductImages(ProductsImages[i]);
+}
+
+function randomNumber() {
+    return Math.floor(Math.random() * allProducts.length);
+}
+
+let leftImgEl = document.getElementById('leftImg');
+let middleImgEl = document.getElementById('middleImg');
+let rightImgEl = document.getElementById('rightImg');
 
 let leftImgIndex;
 let middleImgIndex;
@@ -20,65 +37,35 @@ let rightImgIndex;
 
 let lastImages = [];
 
-function ProductImages(imageName) {
-
-    this.imageName = imageName.split('.')[0];
-    this.imageSrc = 'img/' + imageName;
-    this.totalClicks = 0;
-    this.totalViews = 0;
-    allProducts.push(this);
-    allImageName.push(this.imageName);
-    
-}
-
-for (let i = 0; i < ProductsImages.length; i++) {
-    new ProductImages(ProductsImages[i]);
-}
-
-function randomImage() {
-    return Math.floor(Math.random() * allProducts.length);
-}
-
-
 function renderImg() {
-    leftImgIndex = randomImage();
-    middleImgIndex = randomImage();
-    rightImgIndex = randomImage();
-
-   
-
-    while (leftImgIndex === middleImgIndex || leftImgIndex === rightImgIndex || middleImgIndex === rightImgIndex || lastImages.includes(leftImgIndex) || lastImages.includes(middleImgIndex) || lastImages.includes(rightImgIndex) ) {
-        leftImgIndex = randomImage();
-        middleImgIndex = randomImage();
-        rightImgIndex = randomImage();
-
+    leftImgIndex = randomNumber();
+    middleImgIndex = randomNumber();
+    rightImgIndex = randomNumber();
+    while (leftImgIndex === rightImgIndex || middleImgIndex === rightImgIndex || middleImgIndex === leftImgIndex ||
+        lastImages.includes(leftImgIndex) || lastImages.includes(rightImgIndex) || lastImages.includes(middleImgIndex)) {
+        leftImgIndex = randomNumber();
+        middleImgIndex = randomNumber();
+        rightImgIndex = randomNumber();
     }
-
-    lImgEl.setAttribute('src', allProducts[leftImgIndex].imageSrc);
-    lImgEl.setAttribute('title', allProducts[leftImgIndex].imageName);
+    leftImgEl.setAttribute('src', allProducts[leftImgIndex].imageSrc);
+    leftImgEl.setAttribute('title', allProducts[leftImgIndex].imageSrc);
     allProducts[leftImgIndex].totalViews++;
-
-    mImgEl.setAttribute('src', allProducts[middleImgIndex].imageSrc);
-    mImgEl.setAttribute('title', allProducts[middleImgIndex].imageName);
+    middleImgEl.setAttribute('src', allProducts[middleImgIndex].imageSrc);
+    middleImgEl.setAttribute('title', allProducts[middleImgIndex].imageSrc);
     allProducts[middleImgIndex].totalViews++;
-
-    rImgEl.setAttribute('src', allProducts[rightImgIndex].imageSrc);
-    rImgEl.setAttribute('title', allProducts[rightImgIndex].imageName);
+    rightImgEl.setAttribute('src', allProducts[rightImgIndex].imageSrc);
+    rightImgEl.setAttribute('title', allProducts[rightImgIndex].imageSrc);
     allProducts[rightImgIndex].totalViews++;
     attemptsElement.textContent = attempts;
-
-    lastImages[0]=leftImgIndex;
-    lastImages[1]=middleImgIndex;
-    lastImages[2]=rightImgIndex;
-
-
+    lastImages[0] = leftImgIndex;
+    lastImages[1] = middleImgIndex;
+    lastImages[2] = rightImgIndex;
 }
+
 renderImg();
-
-lImgEl.addEventListener('click', handelClicks);
-mImgEl.addEventListener('click', handelClicks);
-rImgEl.addEventListener('click', handelClicks);
-
+leftImgEl.addEventListener('click', handelClicks);
+middleImgEl.addEventListener('click', handelClicks);
+rightImgEl.addEventListener('click', handelClicks);
 function handelClicks(event) {
     attempts++;
     if (attempts <= maxAttempts) {
@@ -88,82 +75,90 @@ function handelClicks(event) {
         else if (event.target.id === 'middleImg') {
             allProducts[middleImgIndex].totalClicks++;
         }
-        else (event.target.id === 'rightImg')
-        {
+        else if (event.target.id === 'rightImg') {
             allProducts[rightImgIndex].totalClicks++;
         }
         renderImg();
     } else {
-        lImgEl.removeEventListener('click', handelClicks);
-        mImgEl.removeEventListener('click', handelClicks);
-        rImgEl.removeEventListener('click', handelClicks);
-
-        let result = document.getElementById('results-container')
-        let btn = document.createElement('button')
-        result.appendChild(btn);
-        btn.textContent='View Results';
-        
-        btn.addEventListener('click', resultClick);
-
-        function resultClick(event) {
-            let ulElement = document.getElementById('results');
-            let liElement;
+        leftImgEl.removeEventListener('click', handelClicks);
+        middleImgEl.removeEventListener('click', handelClicks);
+        rightImgEl.removeEventListener('click', handelClicks);
+        storageProduct();
+        let viewEl = document.getElementById('results-container');
+        let buttonEl = document.createElement('button');
+        viewEl.appendChild(buttonEl);
+        buttonEl.textContent = 'View Results';
+        buttonEl.addEventListener('click', viewResults);
+        function viewResults() {
+            let ulEl = document.getElementById('results');
+            let liEl;
             for (let i = 0; i < allProducts.length; i++) {
-                liElement = document.createElement('li');
-                ulElement.appendChild(liElement);
-                liElement.textContent = `${allProducts[i].imageName} had ${allProducts[i].totalClicks} votes, and was seen ${allProducts[i].totalViews} times.`
-                
+                liEl = document.createElement('li');
+                ulEl.appendChild(liEl);
+                liEl.textContent = `${allProducts[i].imageName} had ${allProducts[i].totalClicks} votes, and was seen ${allProducts[i].totalViews} times.`
                 allTotalClicks.push(allProducts[i].totalClicks);
                 allTotalViews.push(allProducts[i].totalViews);
-            
             }
-            btn.removeEventListener('click', resultClick);
+            buttonEl.removeEventListener('click', viewResults);
             chartRender();
         }
-
     }
 }
 
-function chartRender(){
-var ctx = document.getElementById('myChart').getContext('2d');
+function chartRender() {
+    var ctx = document.getElementById('myChart').getContext('2d');
 
-Chart.defaults.font.size = 16;
-Chart.defaults.borderColor='red';
-Chart.defaults.backgroundColor='white';
-Chart.defaults.color='gold';
+    Chart.defaults.font.size = 16;
+    Chart.defaults.borderColor = 'red';
+    Chart.defaults.backgroundColor = 'white';
+    Chart.defaults.color = 'gold';
 
 
-var myChart = new Chart(ctx, {
-    type: 'bar',
-    data: {
-        labels: allImageName,
-        datasets: [{
-            label: '# of Votes',
-            data: allTotalClicks,
-            backgroundColor: [
-                'rgba(255, 32, 255, 0.2)',
-            ],
-            borderColor: [
-                'rgba(255, 32, 255, 1)',
-            ],
-            borderWidth: 2
-        },{
-            label: '# of Views',
-            data: allTotalViews,
-            backgroundColor: [ 
-                'rgba(153, 102, 255, 0.2)',
-            ],
-            borderColor: [
-                'rgba(153, 102, 255, 1)',
-            ],
-            borderWidth: 2
-        }]
-    },
-    options: {
-        scales: {
-            y: {
-                beginAtZero: true,
-            },
+    var myChart = new Chart(ctx, {
+        type: 'bar',
+        data: {
+            labels: allImageName,
+            datasets: [{
+                label: '# of Votes',
+                data: allTotalClicks,
+                backgroundColor: [
+                    'rgba(255, 32, 255, 0.2)',
+                ],
+                borderColor: [
+                    'rgba(255, 32, 255, 1)',
+                ],
+                borderWidth: 2
+            }, {
+                label: '# of Views',
+                data: allTotalViews,
+                backgroundColor: [
+                    'rgba(153, 102, 255, 0.2)',
+                ],
+                borderColor: [
+                    'rgba(153, 102, 255, 1)',
+                ],
+                borderWidth: 2
+            }]
+        },
+        options: {
+            scales: {
+                y: {
+                    beginAtZero: true,
+                },
+            }
         }
+    });
+}
+
+function storageProduct() {
+    let data = JSON.stringify(allProducts);
+    localStorage.setItem('bus-mall', data);
+}
+function gettingStorageProduct() {
+    let stringObj = localStorage.getItem('bus-mall');
+    let normalObj = JSON.parse(stringObj);
+    if (normalObj !== null) {
+        allProducts = normalObj;
     }
-});}
+}
+gettingStorageProduct();
