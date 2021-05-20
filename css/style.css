@@ -2,7 +2,7 @@
   box-sizing: border-box;
 }
 body {
-  background-color: rgb(58, 57, 57);
+  background-color: rgb(0, 0, 0);
   color: whitesmoke;
   width: 100%;
   margin-left: auto;
@@ -36,7 +36,21 @@ main p {
   width: 1200px;
   margin: 0 auto;
   height: 350px;
+ 
 }
+.frame{
+  background-size: contain;
+  cursor: pointer;
+  transition: all 200ms ease-in;
+  filter: grayscale(1) opacity(.8);
+}
+.frame:hover {
+  filter: grayscale(0) opacity(1);
+
+}
+
+
+
 main img {
   margin: 10px;
   display: block;
@@ -63,31 +77,58 @@ main ul {
     padding: 20px 20px
 }
 main button{
-    box-shadow: 0px 1px 0px 0px #fff6af;
-	background:linear-gradient(to bottom, #ffec64 5%, #ffab23 100%);
-	background-color:#ffec64;
-	border-radius:21px;
-	border:1px solid #ffaa22;
-	display:inline-block;
-	cursor:pointer;
-	color:#333333;
-	font-family:Arial;
-	font-size:28px;
-	font-weight:bold;
-	font-style:italic;
-	padding:10px 76px;
-	text-decoration:none;
-	text-shadow:0px 1px 0px #ffee66;
+  width: 220px;
+  height: 50px;
+  border: none;
+  outline: none;
+  color: #fff;
+  background: #111;
+  cursor: pointer;
+  position: relative;
+  z-index: 0;
+  border-radius: 10px;
 }
-main button:hover {
-    background:linear-gradient(to bottom, #ffab23 5%, #ffec64 100%);
-	background-color:#ffab23;
+main button::before{
+  content: '';
+    background: linear-gradient(45deg, #ff0000, #ff7300, #fffb00, #48ff00, #00ffd5, #002bff, #7a00ff, #ff00c8, #ff0000);
+    position: absolute;
+    top: -2px;
+    left:-2px;
+    background-size: 400%;
+    z-index: -1;
+    filter: blur(5px);
+    width: calc(100% + 4px);
+    height: calc(100% + 4px);
+    animation: glowing 20s linear infinite;
+    opacity: 0;
+    transition: opacity .3s ease-in-out;
+    border-radius: 10px;
+}
+main button:hover:before {
+  opacity: 1;
     }
+    main button:after {
+      z-index: -1;
+    content: '';
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    background: #111;
+    left: 0;
+    top: 0;
+    border-radius: 10px;
+      }
 main button:active {
-        
-	position:relative;
-	top:1px;
+	color: #000
     }
+    main button:active::after {
+      background: transparent;
+    }
+    @keyframes glowing {
+      0% { background-position: 0 0; }
+      50% { background-position: 400% 0; }
+      100% { background-position: 0 0; }
+  }
 footer{
     text-align: center;
     padding: 20px 0;
@@ -95,3 +136,4 @@ footer{
 #chart-container{
   padding: 15px 150px;
 }
+
